@@ -63,7 +63,7 @@ services:
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
-    user: Enas_Ragab                       
+    user: root                      
     ports:
       - "8080:8080"
       - "50000:50000"

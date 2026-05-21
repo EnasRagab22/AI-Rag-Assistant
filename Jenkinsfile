@@ -48,7 +48,7 @@ pipeline {
                             echo "Container not found → creating..."
                             docker run -d \
                                 --name ${SonarContainer} \
-                                -p 9090:9000 \
+                                -p 9000:9000 \
                                 --restart=always \
                                 -v sonar_data:/opt/sonarqube/data \
                                 -v sonar_extensions:/opt/sonarqube/extensions \
