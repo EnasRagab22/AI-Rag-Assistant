@@ -9,6 +9,8 @@ pipeline {
         SonarContainer     = 'sonarqube'
         BACKEND_PORT       = '5050'
         FRONTEND_PORT      = '8522'
+        SONAR_HOST         = 'sonarqube'      // container name — resolves inside Docker network
+        SONAR_PORT         = '9000'
     }
 
     stages {
@@ -48,6 +50,7 @@ pipeline {
                             echo "Container not found → creating..."
                             docker run -d \
                                 --name ${SonarContainer} \
+                                --network enterpriseaiassistant_tipshindawicompany_app_network \
                                 -p 9000:9000 \
                                 --restart=always \
                                 -v sonar_data:/opt/sonarqube/data \
@@ -56,10 +59,12 @@ pipeline {
                         fi
                     fi
 
-                    until curl -s http://localhost:9000/api/system/status | grep -q '"status":"UP"'; do
+                    echo "⏳ Waiting for SonarQube to be ready..."
+                    until curl -s http://${SONAR_HOST}:${SONAR_PORT}/api/system/status | grep -q '"status":"UP"'; do
                         echo "Waiting for SonarQube..."
                         sleep 5
                     done
+                    echo "✅ SonarQube is ready"
                 """
             }
         }
@@ -115,10 +120,10 @@ EOF
                     echo "⏳ Waiting for backend to load Llama 3 model..."
                     sleep 30
 
-                    curl -f http://localhost:${BACKEND_PORT}/health || exit 1
+                    curl -f http://tips_hindawi_backend:8000/health || exit 1
                     echo "✅ Backend is up"
 
-                    curl -f http://localhost:${FRONTEND_PORT} || exit 1
+                    curl -f http://tips_hindawi_frontend:8501 || exit 1
                     echo "✅ Frontend is up"
                 """
             }
@@ -133,7 +138,7 @@ EOF
             echo "Deployment successful ✅"
             echo "Frontend URL : http://localhost:${FRONTEND_PORT}"
             echo "Backend URL  : http://localhost:${BACKEND_PORT}"
-            echo "SonarQube    : http://localhost:9090"
+            echo "SonarQube    : http://localhost:${SONAR_PORT}"
         }
         failure {
             echo "Deployment failed ❌"

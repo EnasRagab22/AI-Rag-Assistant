@@ -1,0 +1,71 @@
+- name: "Build and Deploy Enterprise AI Assistant — Tips Hindawi"
+  hosts: localhost
+  connection: local
+  tasks:
+
+    - name: Stop container tips_hindawi_backend
+      command: docker container stop tips_hindawi_backend
+      ignore_errors: yes
+
+    - name: Stop container tips_hindawi_frontend
+      command: docker container stop tips_hindawi_frontend
+      ignore_errors: yes
+
+    - name: Remove container tips_hindawi_backend
+      command: docker container rm tips_hindawi_backend
+      ignore_errors: yes
+
+    - name: Remove container tips_hindawi_frontend
+      command: docker container rm tips_hindawi_frontend
+      ignore_errors: yes
+
+    - name: Remove backend image
+      command: docker image rmi enterpriseaiassistant_tipshindawicompany-backend:latest
+      ignore_errors: yes
+
+    - name: Remove frontend image
+      command: docker image rmi enterpriseaiassistant_tipshindawicompany-frontend:latest
+      ignore_errors: yes
+
+    - name: Remove app network
+      command: docker network rm enterpriseaiassistant_tipshindawicompany_app_network
+      ignore_errors: yes
+
+    - name: Create app network
+      command: docker network create enterpriseaiassistant_tipshindawicompany_app_network
+
+    - name: Build backend image
+      command: docker build -t enterpriseaiassistant_tipshindawicompany-backend:latest -f Dockerfile.backend .
+
+    - name: Build frontend image
+      command: docker build -t enterpriseaiassistant_tipshindawicompany-frontend:latest -f Dockerfile.frontend .
+
+    - name: Run backend container
+      command: docker run -d
+        --name tips_hindawi_backend
+        --network enterpriseaiassistant_tipshindawicompany_app_network
+        -p 5050:8000
+        -e HUGGING_FACE_HUB_TOKEN="hf_token={{ hf_token }}"
+        -e API_KEY=secret226
+        -e DATA_DIR=/app/data
+        -v ./data:/app/data
+        enterpriseaiassistant_tipshindawicompany-backend:latest
+
+    - name: Wait for backend to be healthy
+      command: curl -f http://localhost:5050/health
+      register: health_check
+      retries: 20
+      delay: 15
+      until: health_check.rc == 0
+
+    - name: Run frontend container
+      command: docker run -d
+        --name tips_hindawi_frontend
+        --network enterpriseaiassistant_tipshindawicompany_app_network
+        -p 8522:8501
+        -e API_URL=http://tips_hindawi_backend:8000
+        -e API_KEY=secret226
+        enterpriseaiassistant_tipshindawicompany-frontend:latest
+
+    - name: Show running containers
+      command: docker ps
