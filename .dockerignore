@@ -1,0 +1,73 @@
+# ── Version Control ──────────────────────────────────────────
+.git
+.gitignore
+
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+
+# ── Virtual Environments ──────────────────────────────────────
+venv/
+env/
+.venv/
+.conda/
+
+# ── Secrets ───────────────────────────────────────────────────
+.env
+.env.*
+secrets/
+
+# ── FAISS Index (rebuilt at container startup) ────────────────
+faiss_index/
+*.faiss
+*.pkl
+
+# ── HuggingFace Cache (downloaded inside container) ──────────
+.cache/
+*.cache
+
+# ── Jupyter Notebooks ─────────────────────────────────────────
+*.ipynb
+.ipynb_checkpoints/
+
+# ── Testing ───────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+tests/
+
+# ── CI/CD ─────────────────────────────────────────────────────
+Jenkinsfile
+deploy.yml
+inventory.ini
+.github/
+
+# ── Logs ──────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── OS & Editor ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# ── Docker ────────────────────────────────────────────────────
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+nginx.conf
+
+# ── Docs ──────────────────────────────────────────────────────
+README.md
+*.md
+docs/

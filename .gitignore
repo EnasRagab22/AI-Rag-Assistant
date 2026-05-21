@@ -1,0 +1,66 @@
+# ── Secrets & Environment ─────────────────────────────────────
+.env
+.env.*
+*.env
+!.env.example
+secrets/
+
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+wheels/
+*.whl
+
+# ── Virtual Environments ──────────────────────────────────────
+venv/
+env/
+.venv/
+.conda/
+
+# ── Jupyter ───────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ── FAISS Index (generated at runtime) ───────────────────────
+faiss_index/
+*.faiss
+*.pkl
+
+# ── HuggingFace Cache ─────────────────────────────────────────
+.cache/
+backend/.cache/
+
+# ── Logs ──────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── Testing ───────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editors ───────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ── Docker runtime artifacts ──────────────────────────────────
+docker-compose.override.yml
+
+# ── Company Documents (add manually, never commit) ────────────
+backend/data/*.pdf
+backend/data/*.txt
+backend/data/*.docx
+data/
