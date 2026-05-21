@@ -32,7 +32,10 @@ pipeline {
         stage('Down Containers') {
             steps {
                 sh """
-                    docker compose down || true
+                    docker stop tips_hindawi_backend  || true
+                    docker stop tips_hindawi_frontend || true
+                    docker rm   tips_hindawi_backend  || true
+                    docker rm   tips_hindawi_frontend || true
                 """
             }
         }
@@ -107,8 +110,7 @@ EOF
         stage('Deploy Stack') {
             steps {
                 sh '''
-                    docker compose down || true
-                    docker compose up -d --build
+                    docker-compose up -d --build tips_hindawi_backend tips_hindawi_frontend
                 '''
             }
         }
@@ -142,7 +144,7 @@ EOF
         }
         failure {
             echo "Deployment failed ❌"
-            sh "docker compose logs --tail=50 || true"
+            sh "docker logs tips_hindawi_backend --tail=50 || true"
         }
     }
 }
